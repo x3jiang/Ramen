@@ -57,7 +57,7 @@ class DataLoader:
         res = self.data.groupby('Country').agg({'Stars': 'mean'}).sort_values(by='Stars', ascending=False)
         return res
 
-    def StyleInCountry(self):
+    def styleInCountry(self):
         """
         Record the number of each style consumed in each country
         dic[country][style] = a number
@@ -71,12 +71,12 @@ class DataLoader:
                 dic[row['Country']][row['Style']] = dic[row['Country']].setdefault(row['Style'],0)+1
         return dic
 
-    def TopStyleInCountry(self):
+    def topStyleInCountry(self):
         """
         The most popular styles in each country
         :return: a dictionary
         """
-        dic = self.StyleInCountry()
+        dic = self.styleInCountry()
         res = {}
         for country, styles in dic.items():
             theMax = 0
@@ -92,4 +92,4 @@ class DataLoader:
 
 path = './ramen-ratings.csv'
 test = DataLoader(path)
-print(test.TopStyleInCountry())
+print(test.topStyleInCountry())
