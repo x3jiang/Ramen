@@ -1,8 +1,36 @@
 import pandas as pd
 class DataLoader:
     """
-    Dataloader
+    Data Loader
     """
+    flavours = {
+        'beef': 0,
+        'chicken': 0,
+        'mushroom': 0,
+        'laksa': 0,
+        'crab': 0,
+        'chilli': 0,
+        'pepper': 0,
+        'tom yam': 0,
+        'seafood': 0,
+        'spicy': 0,
+        'curry': 0,
+        'kyushu white': 0,
+        'thai': 0,
+        'china': 0,
+        'japan': 0,
+        'tokyo': 0,
+        'cream': 0,
+        'sriacha': 0,
+        'lime': 0,
+        'hot': 0,
+        'shrimp': 0,
+        'tonkotsu': 0,
+        'pork': 0,
+        'lamb': 0,
+        'oriental': 0,
+        'tomato': 0
+    }
     def __init__(self, filePath):
         """
         init and filter invalid data
@@ -39,14 +67,6 @@ class DataLoader:
         :return: DataFrame
         """
         res = self.data.groupby('Brand').agg({'Stars': 'mean'}).sort_values(by='Stars', ascending=False)
-        return res
-
-    def topSumStarsForEachBrand(self):
-        """
-        Top brands with the most popular ramens sorted by sum of stars
-        :return: DataFrame
-        """
-        res = self.data.groupby('Brand').agg({'Stars': 'sum'}).sort_values(by='Stars', ascending=False)
         return res
 
     def topCountryForMeanStars(self):
@@ -90,6 +110,30 @@ class DataLoader:
                     res[country].append((style, number))
         return res
 
+    def countFlavour(self, brand=None, country=None):
+        """
+        count the number of each similar flavour
+        :param brand: default is None, meaning count all the brands in.
+        It can receive a brand (string) to specify a brand
+        :param country: default is None, meaning count all the countries in.
+        It can receive a country (string) to specify a country
+        :return: dictionary
+        """
+
+        flavours = dict(DataLoader.flavours)
+        for index, row in self.data.iterrows():
+            if brand:
+                if row['Brand'] != brand:
+                    continue
+            if country:
+                if row['Country'] != country:
+                    continue
+            words = row['Variety'].split()
+            for word in words:
+                if word.lower() in flavours:
+                    flavours[word.lower()]+=1
+        return flavours
+
 path = './ramen-ratings.csv'
 test = DataLoader(path)
-print(test.topStyleInCountry())
+print(test.countFlavour(country='Japan'))
